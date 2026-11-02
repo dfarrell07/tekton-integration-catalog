@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: deploy-fbc-operator-run
+  labels:
+    upstream-usable: 'true'
+  annotations:
+    submariner.io/purpose: Temporary required OCP 5.0 stage validation using tested
+      pipeline commit; retain until upstream and tenant source reconcile
+spec:
+  pipelineRef:
+    resolver: git
+    params:
+    - name: url
+      value: https://github.com/dfarrell07/tekton-integration-catalog.git
+    - name: revision
+      value: de8c7b0b72fb4f96d8dfe5505cd60ec02cbbca04
+    - name: pathInRepo
+      value: pipelines/deploy-fbc-operator/0.4/deploy-fbc-operator.yaml
+  workspaces:
+  - name: shared-data
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
